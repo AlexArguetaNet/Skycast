@@ -31,6 +31,8 @@ import okhttp3.OkHttp;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -46,8 +48,10 @@ public class HomeFragment extends Fragment {
     IHome mListener;
     final String TAG = "demoss";
     OkHttpClient client = new OkHttpClient();
+    OkHttpClient clientFiveDay = new OkHttpClient();
     Handler mHandler;
     Handler fiveDayHandler;
+    Calendar calendar;
     ImageView currWeatherImage;
     TextView currTempText;
     TextView weatherDescText;
@@ -108,6 +112,7 @@ public class HomeFragment extends Fragment {
         currTempText = view.findViewById(R.id.currTempText);
         weatherDescText = view.findViewById(R.id.weatherDescText);
         cityNameText = view.findViewById(R.id.cityNameText);
+        calendar = new GregorianCalendar();
 
         // Setting up five day recyclerView
         rv = view.findViewById(R.id.recyclerViewFiveDay);
@@ -156,7 +161,7 @@ public class HomeFragment extends Fragment {
 
                 if (msg.getData().getInt("API_FIVE_DAY_RESPONSE_STATUS") == 1) {
                     String failedMsgString = "Please make sure you are connected to wifi or cellular data";
-                    createAlert("No Internet Connection", failedMsgString);
+
 
                     return false;
                 }
@@ -172,20 +177,35 @@ public class HomeFragment extends Fragment {
         });
 
 
+
+        // Refresh button action
+        view.findViewById(R.id.refreshImage).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getCurrentWeather();
+            }
+        });
+
+
+
+
+
+
+
         // Inflate the layout for this fragment
         return view;
     }
 
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        /*
-            Will make the API call each time the user goes back to the app
-            when it is running in the background.
-         */
-        getCurrentWeather();
-    }
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        /*
+//            Will make the API call each time the user goes back to the app
+//            when it is running in the background.
+//         */
+//        getCurrentWeather();
+//    }
 
     public void getCurrentWeather() {
 
@@ -207,6 +227,8 @@ public class HomeFragment extends Fragment {
 
                 failMsg.setData(bundle);
                 mHandler.sendMessage(failMsg);
+
+                Log.d(TAG, "onFailure: FAILED Current Forecast");
 
             }
 
@@ -234,8 +256,8 @@ public class HomeFragment extends Fragment {
         Request fiveDayForecastRequest = new Request.Builder()
                 .url("https://api.openweathermap.org/data/2.5/forecast?zip=28223&appid=833110e347976d143c39463d4742e9fc&units=imperial&cnt=5")
                 .build();
-        
-        client.newCall(fiveDayForecastRequest).enqueue(new Callback() {
+
+        clientFiveDay.newCall(fiveDayForecastRequest).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 // API call has failed
@@ -245,7 +267,7 @@ public class HomeFragment extends Fragment {
                 bundle.putInt("API_FIVE_DAY_RESPONSE_STATUS", 1);
 
                 failMsg.setData(bundle);
-                mHandler.sendMessage(failMsg);
+                fiveDayHandler.sendMessage(failMsg);
             }
 
             @Override

@@ -82,7 +82,7 @@ class WeatherListItem implements Serializable {
     Clouds clouds;
     WindListItem wind;
     int visibility;
-    double pop;
+    double pop; // Probability of precipitation
     SysListItem sys;
     String dt_text;
 
