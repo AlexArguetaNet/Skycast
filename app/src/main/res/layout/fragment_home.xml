@@ -7,51 +7,93 @@
     android:layout_height="match_parent"
     tools:context=".HomeFragment" >
 
-    <TextView
-        android:id="@+id/cityNameText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:textColor="@color/white"
-        android:textSize="35sp"
-        app:layout_constraintEnd_toEndOf="@+id/currWeatherImage"
-        app:layout_constraintStart_toStartOf="@+id/currWeatherImage"
-        app:layout_constraintTop_toBottomOf="@+id/currTempText" />
 
-    <TextView
-        android:id="@+id/weatherDescText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:textColor="@color/white"
-        android:textSize="27sp"
-        app:layout_constraintEnd_toEndOf="@+id/cityNameText"
-        app:layout_constraintHorizontal_bias="0.484"
-        app:layout_constraintStart_toStartOf="@+id/cityNameText"
-        app:layout_constraintTop_toBottomOf="@+id/cityNameText" />
-
-    <ImageView
-        android:id="@+id/currWeatherImage"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_marginTop="56dp"
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:src="@tools:sample/avatars" />
+        app:layout_constraintVertical_bias="1.0">
 
-    <TextView
-        android:id="@+id/currTempText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
-        android:textColor="@color/white"
-        android:textSize="35sp"
-        app:layout_constraintEnd_toEndOf="@+id/currWeatherImage"
-        app:layout_constraintHorizontal_bias="0.508"
-        app:layout_constraintStart_toStartOf="@+id/currWeatherImage"
-        app:layout_constraintTop_toBottomOf="@+id/currWeatherImage" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
+            <ImageView
+                android:id="@+id/currWeatherImage"
+                android:layout_width="250dp"
+                android:layout_height="250dp"
+                android:layout_marginTop="50dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:src="@tools:sample/avatars" />
 
+            <TextView
+                android:id="@+id/currTempText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:textColor="@color/white"
+                android:textSize="35dp"
+                app:layout_constraintEnd_toEndOf="@+id/currWeatherImage"
+                app:layout_constraintStart_toStartOf="@+id/currWeatherImage"
+                app:layout_constraintTop_toBottomOf="@+id/currWeatherImage" />
+
+            <TextView
+                android:id="@+id/cityNameText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:textColor="@color/white"
+                android:textSize="32dp"
+                app:layout_constraintEnd_toEndOf="@+id/currTempText"
+                app:layout_constraintStart_toStartOf="@+id/currTempText"
+                app:layout_constraintTop_toBottomOf="@+id/currTempText" />
+
+            <TextView
+                android:id="@+id/weatherDescText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:textColor="@color/white"
+                android:textSize="32dp"
+                app:layout_constraintEnd_toEndOf="@+id/cityNameText"
+                app:layout_constraintStart_toStartOf="@+id/cityNameText"
+                app:layout_constraintTop_toBottomOf="@+id/cityNameText" />
+
+            <TextView
+                android:id="@+id/textView11"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:text="TextView"
+                app:layout_constraintEnd_toEndOf="@+id/weatherDescText"
+                app:layout_constraintStart_toStartOf="@+id/weatherDescText"
+                app:layout_constraintTop_toBottomOf="@+id/weatherDescText" />
+
+            <TextView
+                android:id="@+id/textView12"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="100dp"
+                android:text="TextView"
+                app:layout_constraintEnd_toEndOf="@+id/textView11"
+                app:layout_constraintStart_toStartOf="@+id/textView11"
+                app:layout_constraintTop_toBottomOf="@+id/textView11" />
+
+            <TextView
+                android:id="@+id/textView13"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="400dp"
+                android:text="TextView"
+                app:layout_constraintEnd_toEndOf="@+id/textView12"
+                app:layout_constraintStart_toStartOf="@+id/textView12"
+                app:layout_constraintTop_toBottomOf="@+id/textView12" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

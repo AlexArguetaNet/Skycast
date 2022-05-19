@@ -220,7 +220,7 @@ public class HomeFragment extends Fragment {
         if (context instanceof IHome) {
 
         } else {
-            throw new RuntimeException("Activity must implememnt IHome");
+            throw new RuntimeException("Activity must implement IHome");
         }
     }
 
