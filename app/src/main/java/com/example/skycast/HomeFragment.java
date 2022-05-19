@@ -8,6 +8,8 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Handler;
 import android.os.Message;
@@ -45,10 +47,14 @@ public class HomeFragment extends Fragment {
     final String TAG = "demoss";
     OkHttpClient client = new OkHttpClient();
     Handler mHandler;
+    Handler fiveDayHandler;
     ImageView currWeatherImage;
     TextView currTempText;
     TextView weatherDescText;
     TextView cityNameText;
+    RecyclerView rv;
+    LinearLayoutManager myLayout;
+    FiveDayRecyclerViewAdapter adapter;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -103,6 +109,12 @@ public class HomeFragment extends Fragment {
         weatherDescText = view.findViewById(R.id.weatherDescText);
         cityNameText = view.findViewById(R.id.cityNameText);
 
+        // Setting up five day recyclerView
+        rv = view.findViewById(R.id.recyclerViewFiveDay);
+        myLayout = new LinearLayoutManager(getContext());
+        myLayout.setOrientation(LinearLayoutManager.HORIZONTAL);
+        rv.setLayoutManager(myLayout);
+
 
         // Method to get the HTTP response containing the weather data
         getCurrentWeather();
@@ -110,7 +122,7 @@ public class HomeFragment extends Fragment {
 
 
 
-        // Thread handler to change UI components according to HTTPS Response
+        // Thread handler for the current weather API call
         mHandler = new Handler(new Handler.Callback() {
             @Override
             public boolean handleMessage(@NonNull Message msg) {
@@ -137,6 +149,28 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        // Thread handler for the five-day forecast API call
+        fiveDayHandler = new Handler(new Handler.Callback() {
+            @Override
+            public boolean handleMessage(@NonNull Message msg) {
+
+                if (msg.getData().getInt("API_FIVE_DAY_RESPONSE_STATUS") == 1) {
+                    String failedMsgString = "Please make sure you are connected to wifi or cellular data";
+                    createAlert("No Internet Connection", failedMsgString);
+
+                    return false;
+                }
+
+                FiveDayForecastResponse fiveDayForecastResponse = (FiveDayForecastResponse) msg.getData().getSerializable("FIVE_DAY_FORECAST");
+
+                adapter = new FiveDayRecyclerViewAdapter(fiveDayForecastResponse.list);
+                rv.setAdapter(adapter);
+
+
+                return false;
+            }
+        });
+
 
         // Inflate the layout for this fragment
         return view;
@@ -156,12 +190,13 @@ public class HomeFragment extends Fragment {
     public void getCurrentWeather() {
 
         // Create request object
-        Request request = new Request.Builder()
+        // Get current forecast
+        Request currentWeatherRequest = new Request.Builder()
                 .url("https://api.openweathermap.org/data/2.5/weather?zip=28223,us&appid=833110e347976d143c39463d4742e9fc&units=imperial")
                 .build();
 
         // Initiate API call
-        client.newCall(request).enqueue(new Callback() {
+        client.newCall(currentWeatherRequest).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 // API call has failed
@@ -191,6 +226,46 @@ public class HomeFragment extends Fragment {
 
                 weatherMsg.setData(bundle);
                 mHandler.sendMessage(weatherMsg);
+
+            }
+        });
+
+        // Get 5 day forecast
+        Request fiveDayForecastRequest = new Request.Builder()
+                .url("https://api.openweathermap.org/data/2.5/forecast?zip=28223&appid=833110e347976d143c39463d4742e9fc&units=imperial&cnt=5")
+                .build();
+        
+        client.newCall(fiveDayForecastRequest).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                // API call has failed
+                Message failMsg = new Message();
+                Bundle bundle = new Bundle();
+
+                bundle.putInt("API_FIVE_DAY_RESPONSE_STATUS", 1);
+
+                failMsg.setData(bundle);
+                mHandler.sendMessage(failMsg);
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+
+                // API call successful
+                Gson gson = new Gson();
+                FiveDayForecastResponse fiveDayForecastResponse = gson.fromJson(response.body().charStream(), FiveDayForecastResponse.class);
+
+                // Create message to send to the main thread
+                Message fiveDayMsg = new Message();
+                Bundle bundle = new Bundle();
+
+                bundle.putSerializable("FIVE_DAY_FORECAST", fiveDayForecastResponse);
+                bundle.putInt("API_FIVE_DAY_RESPONSE_STATUS", 0);
+
+                fiveDayMsg.setData(bundle);
+
+                fiveDayHandler.sendMessage(fiveDayMsg);
+
 
             }
         });
