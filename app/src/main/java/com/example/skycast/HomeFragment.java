@@ -145,7 +145,7 @@ public class HomeFragment extends Fragment {
                 // Generate weather icon. Use https in URL
                 Picasso.get().load("https://openweathermap.org/img/wn/" + currWeather.weather.get(0).icon + "@4x.png").into(currWeatherImage);
 
-                currTempText.setText(String.valueOf(currWeather.main.temp + "\u00B0"));
+                currTempText.setText(String.valueOf( (int) currWeather.main.temp + "\u00B0 F"));
                 cityNameText.setText(currWeather.name);
                 weatherDescText.setText(currWeather.weather.get(0).description);
 

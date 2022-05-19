@@ -54,7 +54,7 @@ public class FiveDayRecyclerViewAdapter extends RecyclerView.Adapter<FiveDayRecy
 
 
         Picasso.get().load("https://openweathermap.org/img/wn/" + day.weather.get(0).icon + "@2x.png").into(holder.weatherImage);
-        holder.tempText.setText(String.valueOf(day.main.temp) + "\u00B0");
+        holder.tempText.setText(String.valueOf((int) day.main.temp) + "\u00B0 F");
 
         holder.position = position;
         holder.weatherListItem = day;
